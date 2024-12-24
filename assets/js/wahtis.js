@@ -44,25 +44,122 @@ window.addEventListener("resize", () => {
 
 // question
 
-gsap.fromTo('.question__container .question__content > *',
-    {
-        y: 300, // Начальная позиция: снизу
-        opacity: 0, // Начальная непрозрачность: невидимый
-    },
-    {
-        y: 0, // Конечная позиция: на своём месте
-        opacity: 1, // Конечная непрозрачность: видимый
-        duration: 1.6, // Длительность анимации
-        stagger: 0.2, // Задержка между элементами
-        ease: "power2.out", // Плавное завершение анимации
-        scrollTrigger: {
-            trigger: '.question', // Триггер на секцию
-            start: 'top center', // Когда верх секции достигает низа экрана
-            end: 'bottom top', // Когда низ секции достигает верха экрана
 
+
+gsap.timeline({
+    scrollTrigger: {
+        trigger: ".question", // Селектор для секции
+        start: "top 10% top", // Запуск, когда верх секции достигает центра экрана
+        end: "bottom center", // Конец, когда низ секции достигает центра экрана
+        toggleActions: "play reverse play reverse", // Включаем обратное воспроизведение
+        
+    },
+})
+    // h3 выезжает сверху вниз, а при обратном скролле "уезжает" вверх
+    .fromTo(
+        ".question__title h3",
+        {
+            y: "-100%", // Начальная позиция
+            opacity: 0.5, // Начальная прозрачность
+        },
+        {
+            y: "0%", // Финальная позиция
+            opacity: 1, // Финальная прозрачность
+            duration: 0.5,
+            ease: "power2.out",
         }
-    }
-);
+    )
+    // h2 выезжает сверху вниз, а затем уходит обратно вверх
+    .fromTo(
+        ".question__text h2",
+        {
+            y: "100%",
+            opacity: 0.5,
+        },
+        {
+            y: "0%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        },
+        "<" // Начинает одновременно с предыдущей анимацией
+    )
+    // whatis__list выезжает слева, затем уходит обратно влево
+    .fromTo(
+        ".whatis__list",
+        {
+            x: "-100%",
+            opacity: 0.5,
+        },
+        {
+            x: "0%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        },
+        "<"
+    )
+    // question__block__last выезжает справа, затем уходит обратно вправо
+    .fromTo(
+        ".question__block__last",
+        {
+            x: "600%",
+            opacity: 0.5,
+        },
+        {
+            x: "0%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        },
+        "<"
+    )
+    // Первые два question__block__link__item выезжают слева, а затем уходят обратно
+    .fromTo(
+        ".question__block__link__item:nth-child(1), .question__block__link__item:nth-child(3)",
+        {
+            x: "-100%",
+            opacity: 0.5,
+        },
+        {
+            x: "0%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        },
+        "<"
+    )
+    // Последние два question__block__link__item выезжают справа, а затем уходят обратно
+    .fromTo(
+        ".question__block__link__item:nth-child(2), .question__block__link__item:nth-child(4)",
+        {
+            x: "200%",
+            opacity: 0.5,
+        },
+        {
+            x: "0%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        },
+        "<"
+    )
+    // question__vid выезжает справа, затем уходит обратно вправо
+    .fromTo(
+        ".question__vid",
+        {
+            x: "200%",
+            opacity: 0.5,
+        },
+        {
+            x: "0%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        },
+        "<"
+    );
+
 
 // info
 
@@ -71,28 +168,43 @@ const infoContentText = document.querySelector('.info__content__text');
 const infoArrow = document.querySelector('.info__background__arrow');
 const infoLogo = document.querySelector('.info__content__image');
 
-const wrapLines = (element) => {
-    const text = element.innerHTML;
-    const lines = text.split(/\n/).map(line => line.trim()).filter(line => line.length > 0);
-    element.innerHTML = lines.map(line => `<span class="text-line">${line}</span>`).join('<br>');
-};
-
-wrapLines(infoContentText);
-
 gsap.fromTo(
-    '.text-line',
-    { opacity: 0, y: 30 },
+    ".info__content__text",
     {
-        opacity: 1,
-        y: 0,
-        stagger: 0.2, // Задержка между анимацией строк
-        duration: 0.8,
+        x: "-100%", // Текст выезжает слева
+        opacity: 0, // Начальная прозрачность
+    },
+    {
+        x: "0%", // Финальная позиция
+        opacity: 1, // Финальная прозрачность
+        duration: 1, // Длительность анимации
         ease: "power2.out",
         scrollTrigger: {
-            trigger: '.info__wrapper',
-            start: 'top center',
-            toggleActions: "play none none none",
-        }
+            trigger: ".info__wrapper",
+            start: "top center", // Анимация начинается, когда секция на центре
+            end: "top center", // Заканчивается одновременно с появлением
+            scrub: true, // Плавная анимация
+        },
+    }
+);
+
+gsap.fromTo(
+    ".info__content__image",
+    {
+        x: "100%", // Изображение выезжает справа
+        opacity: 0, // Начальная прозрачность
+    },
+    {
+        x: "0%", // Финальная позиция
+        opacity: 1, // Финальная прозрачность
+        duration: 1, // Длительность анимации
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: ".info__wrapper",
+            start: "top center", // Анимация начинается, когда секция на центре
+            end: "top center", // Заканчивается одновременно с появлением
+            scrub: true, // Плавная анимация
+        },
     }
 );
 
@@ -128,24 +240,7 @@ if (window.innerWidth > 1200) {
 }
 
 
-gsap.fromTo(infoLogo,
-    {
-        opacity: 0,
-        y: 200,
-    },
-    {
-        opacity: 1,
-        y: 0,
-        duration: 2,
-        ease: "power2.out",
-        scrollTrigger: {
-            trigger: '.info__wrapper',
-            start: 'top center', 
-            end: 'top center', // Заканчивается на середине экрана// Конец анимации совпадает с началом
-            scrub: true, // Убираем плавность, чтобы анимация завершалась мгновенно
-        }
-    }
-);
+
 
 gsap.fromTo(infoArrow,
     {
